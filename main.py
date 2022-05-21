@@ -12,25 +12,39 @@ num = 0
 def pagesearch(url):
     htmltext = s.get(url).text
     soup = BeautifulSoup(htmltext, "lxml")
-    jobs = soup.find_all("div", class_="listItem")
+    listings = soup.find_all("div", class_="listItem")
 
-    for job in jobs:
+    for listing in listings:
+
+        location = listing.find("a", class_="listTitle").text
+        print(location[14:(len(location) - 6)].replace(" ، ", " - "))
+
         try:
-            location = job.find("a", class_="listTitle").text
-            price = job.find("span", class_="price").text
-            size = job.find("span", class_="size").text
-            bedrooms = job.find("span", class_="bed").text
-            bathrooms = job.find("span", class_="bath").text
-            link = job.find("a", class_="listTitle")['href']
-            print(location[14:(len(location)-6)].replace(" ، ", " - "))
+            price = listing.find("span", class_="price").text
             print(price)
-            print(size)
-            print(bedrooms + "bedrooms")
-            print(bathrooms + "bathrooms")
-            print("https://sa.aqar.fm" + urllib.parse.quote(link))
         except AttributeError:
-            print("No data available")
+            print("Apartment price not declared")
 
+        try:
+            size = listing.find("span", class_="size").text
+            print(size)
+        except AttributeError:
+            print("Apartment size not declared")
+
+        try:
+            bedrooms = listing.find("span", class_="bed").text
+            print(bedrooms + "bedrooms")
+        except AttributeError:
+            print("Number of bedrooms not declared")
+        try:
+            bathrooms = listing.find("span", class_="bath").text
+            print(bathrooms + "bathrooms")
+        except AttributeError:
+            print("Number of bathrooms not declared")
+
+
+        link = listing.find("a", class_="listTitle")['href']
+        print("https://sa.aqar.fm" + urllib.parse.quote(link))
 
         global num
         num = num + 1
@@ -47,8 +61,6 @@ def nextpageee(soup):
         return url
     else:
         return
-
-
 
 while True:
     data = pagesearch(url)
