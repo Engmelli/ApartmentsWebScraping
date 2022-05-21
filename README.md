@@ -7,3 +7,4 @@ You can use the application to scrape commercial offices too.
 - Web scarping
 - How to deal with HTML 
 - Organizing data
+- How to work with Arabic links.
